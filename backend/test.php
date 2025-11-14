@@ -1,0 +1,11 @@
+<?php
+// Simple test file to check if backend is accessible
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Content-Type: application/json");
+
+echo json_encode([
+    'success' => true,
+    'message' => 'Backend is working!',
+    'timestamp' => date('Y-m-d H:i:s')
+]);
+?>
