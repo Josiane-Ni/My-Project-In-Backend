@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }) => {
       if (result.success) {
         setCurrentUser(result.user)
         localStorage.setItem('currentUser', JSON.stringify(result.user))
-        return { success: true, message: result.message }
+        return { success: true, message: result.message, user: result.user }
       } else {
         return { success: false, message: result.message }
       }
@@ -124,6 +124,21 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setCurrentUser(null)
     localStorage.removeItem('currentUser')
+  }
+
+  const hasPermissionInternal = (user, requiredRole) => {
+    if (!user) return false
+
+    const roleHierarchy = {
+      customer: 1,
+      agent: 2,
+      admin: 3,
+    }
+
+    const userLevel = roleHierarchy[user.role] || 0
+    const requiredLevel = roleHierarchy[requiredRole] || 0
+
+    return userLevel >= requiredLevel
   }
 
   const testConnection = async () => {
@@ -156,6 +171,10 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     testConnection,
+    hasPermission: (requiredRole) => hasPermissionInternal(currentUser, requiredRole),
+    isAdmin: currentUser?.role === 'admin',
+    isAgent: currentUser?.role === 'agent',
+    isCustomer: currentUser?.role === 'customer',
   }
 
   return (

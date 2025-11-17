@@ -13,7 +13,7 @@ export default function MainLayout({ children }){
       <Toolbar />
       <Box sx={{ display: 'flex' }}>
         <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1, ml: '220px' }}>
+        <Box component="main" sx={{ flexGrow: 1 }}>
           <Container sx={{ mt: 3, minHeight: '70vh' }}>
             {children}
           </Container>

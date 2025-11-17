@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 
 
 const Login = () => {
-  const { login, user } = useAuth()
+  const { login, currentUser } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -13,16 +13,50 @@ const Login = () => {
   const navigate = useNavigate()
 
   useEffect(()=> {
-    if (user) navigate('/dashboard', { replace: true })
-  }, [user, navigate])
+    if (currentUser) {
+      if (currentUser.role === 'admin') {
+        navigate('/admin', { replace: true })
+      } else if (currentUser.role === 'agent') {
+        navigate('/agent', { replace: true })
+      } else {
+        navigate('/dashboard', { replace: true })
+      }
+    }
+  }, [currentUser, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+
+    // Basic validation
+    if (!email || !password) {
+      setError('Please enter both email and password')
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
     setLoading(true)
     const res = await login(email, password)
-    if(res?.success){ navigate('/dashboard', { replace: true }) }
-    else setError(res?.message || 'Invalid email or password')
+    if (res?.success) {
+      const role = res.user?.role || currentUser?.role || 'customer'
+      switch (role) {
+        case 'admin':
+          navigate('/admin', { replace: true })
+          break
+        case 'agent':
+          navigate('/agent', { replace: true })
+          break
+        default:
+          navigate('/dashboard', { replace: true })
+      }
+    } else {
+      setError(res?.message || 'Invalid email or password')
+    }
     setLoading(false)
   }
 

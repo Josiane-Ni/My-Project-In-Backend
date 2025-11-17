@@ -46,7 +46,7 @@ export default function AdminLayout({ children }){
             ))}
           </List>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           {children}
         </Box>
       </Box>

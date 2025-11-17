@@ -7,15 +7,15 @@ import OccupancyChart from '../components/charts/OccupancyChart'
 
 
 const Dashboard = () => {
-  const { user } = useAuth()
-  const initials = (user?.name || user?.email || 'User').split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase()
+  const { currentUser } = useAuth()
+  const initials = (currentUser?.name || currentUser?.email || 'User').split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase()
   return (
     <Box sx={{ p: 3 }}>
       {/* Welcome Section with Avatar */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Box>
           <Typography variant="h4" gutterBottom>
-            Welcome back{user?.name ? `, ${user.name}` : ''}!
+            Welcome back{currentUser?.name ? `, ${currentUser.name}` : ''}!
           </Typography>
           <Typography variant="body1">
             Here's an overview of your travel bookings and activities.
